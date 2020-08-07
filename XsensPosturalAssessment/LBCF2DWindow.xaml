@@ -1,0 +1,314 @@
+﻿<Window x:Class="XsensPosturalAssessment.LBCF2DWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:XsensPosturalAssessment"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        mc:Ignorable="d"
+        Title="Xsens-based 2D static biomechanical analysis " Height="1080" Width="1920"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+
+        <Style x:Key="SliderRepeatButton" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="IsTabStop" Value="false" />
+            <Setter Property="Focusable" Value="false" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border Background="Transparent"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderRepeatButton1" TargetType="RepeatButton">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border SnapsToDevicePixels="True" Background="YellowGreen"  BorderThickness="1" BorderBrush="YellowGreen" Height="10"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SliderThumb" TargetType="Thumb">
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <StackPanel Orientation="Vertical">
+                            <!--
+                            <Path Data="M 0 0 L 8 0 L 4 6 Z"  Stroke="YellowGreen" Margin="-2,0,0,0" StrokeThickness="2" Fill="YellowGreen"></Path>
+                            <Line X1="0" Y1="0" X2="0" Y2="7" Stroke="Gray" StrokeThickness="1" Margin="2,0,0,0" StrokeDashArray="1.5,1.5"></Line>
+                            <TextBlock Foreground="Black" Margin="-2,30,0,0"  Text="{Binding Value, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Slider}}}"/>
+                            -->
+                        </StackPanel>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="Slider"  TargetType="Slider">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" MinHeight="{TemplateBinding MinHeight}" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <TickBar  x:Name="TopTick"  Fill="White" VerticalAlignment="Top"   SnapsToDevicePixels="True" Grid.Row="0" Placement="Top" Height="5" Visibility="Visible"/>
+                <Border BorderBrush="White"  BorderThickness="0,0,0,1" ></Border>
+                <Border x:Name="TrackBackground" VerticalAlignment="Center" Margin="0,-10,0,0" BorderBrush="Red" Background="Red" Height="10" Grid.Row="1"  BorderThickness="1"/>
+                <Track Grid.Row="1" x:Name="PART_Track" Margin="0,-10,0,0"  >
+                    <Track.DecreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButton1}"  Command="Slider.DecreaseLarge" />
+                    </Track.DecreaseRepeatButton>
+                    <Track.Thumb>
+                        <Thumb Style="{StaticResource SliderThumb}" Margin="0,-20,0,0" />
+                    </Track.Thumb>
+                    <Track.IncreaseRepeatButton>
+                        <RepeatButton Style="{StaticResource SliderRepeatButton}" Command="Slider.IncreaseLarge" />
+                    </Track.IncreaseRepeatButton>
+                </Track>
+                <!--
+                <TextBlock Text="0" Grid.Row="1" Margin="0,15,0,0"></TextBlock>
+                -->
+                <TickBar x:Name="BottomTick" Fill="LightGray"   SnapsToDevicePixels="True" Grid.Row="2"   Placement="Bottom" Height="4" Visibility="Collapsed" />
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="TickPlacement"  Value="TopLeft">
+                    <Setter TargetName="TopTick" Property="Visibility"  Value="Visible" />
+                </Trigger>
+                <Trigger Property="TickPlacement" Value="BottomRight">
+                    <Setter TargetName="BottomTick"  Property="Visibility"  Value="Visible" />
+                </Trigger>
+                <Trigger Property="TickPlacement" Value="Both">
+                    <Setter TargetName="TopTick" Property="Visibility" Value="Visible" />
+                    <Setter TargetName="BottomTick" Property="Visibility" Value="Visible" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <Style x:Key="Horizontal_Slider" TargetType="Slider">
+            <Setter Property="Focusable" Value="False"/>
+            <Setter Property="SnapsToDevicePixels" Value="true" />
+            <Setter Property="OverridesDefaultStyle" Value="true" />
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="MinHeight" Value="21" />
+                    <Setter Property="MinWidth" Value="104" />
+                    <Setter Property="Template" Value="{StaticResource Slider}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"></RowDefinition>
+            <RowDefinition Height="60"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="60"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Row="0" Grid.ColumnSpan="3" BorderBrush="White" BorderThickness="3" Background="OrangeRed">
+            <TextBlock Margin="10" Text="Xsens-based 2D static biomechanical analysis " FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" Foreground="White"/>
+        </Border>
+
+        <Button Name="BackButton" HorizontalAlignment="Left" Content=" ◀ Back " FontSize="30" Background="OrangeRed" BorderThickness="3" BorderBrush="White" Foreground="White" Click="BackButton_OnClick"></Button>
+
+        <Button Name="OpenButton" Grid.Row="1" Click="OpenButton_OnClick"  Content="Open Position Data" FontSize="16" FontWeight="Bold" Height="40" Width="180" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Button Name="AnalyzeButton" Grid.Row="1" Grid.Column="2" Click="AnalyzeButton_OnClick"  Margin="0,0,210,0" Content="Analyze" FontSize="20" FontWeight="Bold" Height="40" Width="180" HorizontalAlignment="Right" VerticalAlignment="Center" IsEnabled="False"/>
+        <Button Name="ExportButton" Grid.Row="1" Grid.Column="2" Click="ExportButton_OnClick"  Margin="0,0,010,0" Content="Export Results" FontSize="20" FontWeight="Bold" Height="40" Width="180" HorizontalAlignment="Right" VerticalAlignment="Center" IsEnabled="False"/>
+        <TextBlock Name="fileNameBlock" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="10,0,400,0" TextWrapping="Wrap" Text="File: " FontSize="16" Height="50" VerticalAlignment="Center"/>
+
+
+        <Border Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" BorderBrush="White" BorderThickness="5" Background="Bisque">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Width="180">
+                    <TextBlock Margin="0,10,0,0" HorizontalAlignment="Center" Text="Inputs" FontSize="30" FontWeight="Bold" Foreground="OrangeRed"/>
+
+                    <TextBlock Margin="10,20,10,10" HorizontalAlignment="Center" Text="Weight of human body (kg):" FontSize="16" TextWrapping="Wrap"/>
+                    <TextBox Name="WeightLoadTextBox" Text="70" Margin="10,0,10,10" FontSize="16" Height="30" VerticalContentAlignment="Center"></TextBox>
+
+                    <TextBlock Margin="10,10,10,10" HorizontalAlignment="Center" Text="Height of human body (m):" FontSize="16" TextWrapping="Wrap"/>
+                    <TextBox Name="HeightHumanTextBox" Text="1.75" Margin="10,0,10,10" FontSize="16" Height="30" VerticalContentAlignment="Center"></TextBox>
+
+                    <TextBlock Margin="10,10,10,10" HorizontalAlignment="Center" Text="Weight of load to lift (kg):" FontSize="16" TextWrapping="Wrap"/>
+                    <TextBox Name="WeightHumanTextBox" Text="20" Margin="10,0,10,10" FontSize="16" Height="30" VerticalContentAlignment="Center"></TextBox>
+
+                    <Border Margin="0,20,0,10" BorderBrush="White" BorderThickness="5"></Border>
+
+                    <TextBlock Margin="10,10,10,0" Text="Gender" FontSize="20" FontWeight="Bold"></TextBlock>
+                    <RadioButton GroupName="GenderRadioButtonGroup" Name="MaleRadioButton" VerticalContentAlignment="Center" Margin="10,10,10,10" IsChecked="True" Click="MaleRadioButton_OnClick">
+                        <TextBlock TextWrapping="Wrap" Text="Male" FontSize="16"></TextBlock>
+                    </RadioButton>
+                    <RadioButton GroupName="GenderRadioButtonGroup" Name="FemaleRadioButton" VerticalContentAlignment="Center" Margin="10,0,10,10" Click="FemaleRadioButton_OnClick">
+                        <TextBlock TextWrapping="Wrap" Text="Female" FontSize="16"></TextBlock>
+                    </RadioButton>
+
+
+                    <TextBlock Margin="10,10,10,0" Text="Joints" FontSize="20" FontWeight="Bold"></TextBlock>
+                    <CheckBox Name="WristCheckBox" VerticalContentAlignment="Center" Margin="10,10,10,10" IsChecked="True" Click="WristCheckBox_OnClick">
+                        <TextBlock TextWrapping="Wrap" Text="Wrist" FontSize="16"/>
+                    </CheckBox>
+
+                    <CheckBox Name="ElbowCheckBox" VerticalContentAlignment="Center" Margin="10,0,10,10" IsChecked="True" Click="ElbowCheckBox_OnClick">
+                        <TextBlock TextWrapping="Wrap" Text="Elbow" FontSize="16"/>
+                    </CheckBox>
+
+                    <CheckBox Name="ShoulderCheckBox" VerticalContentAlignment="Center" Margin="10,0,10,10" IsChecked="True" Click="ShoulderCheckBox_OnClick">
+                        <TextBlock TextWrapping="Wrap" Text="Shoulder" FontSize="16"/>
+                    </CheckBox>
+
+                    <CheckBox Name="TorsoCheckBox" VerticalContentAlignment="Center" Margin="10,0,10,10" IsChecked="True" Click="TorsoCheckBox_OnClick">
+                        <TextBlock TextWrapping="Wrap" Text="Torso" FontSize="16"/>
+                    </CheckBox>
+
+                    <CheckBox Name="HipCheckBox" VerticalContentAlignment="Center" Margin="10,0,10,10" IsChecked="True" Click="HipCheckBox_OnClick">
+                        <TextBlock TextWrapping="Wrap" Text="Hip" FontSize="16"/>
+                    </CheckBox>
+
+                    <CheckBox Name="KneeCheckBox" VerticalContentAlignment="Center" Margin="10,0,10,10" IsChecked="True" Click="KneeCheckBox_OnClick">
+                        <TextBlock TextWrapping="Wrap" Text="Knee" FontSize="16"/>
+                    </CheckBox>
+
+                    <CheckBox Name="AnkleCheckBox" VerticalContentAlignment="Center" Margin="10,0,10,10" IsChecked="True" Click="AnkleCheckBox_OnClick">
+                        <TextBlock TextWrapping="Wrap" Text="Ankle" FontSize="16"/>
+                    </CheckBox>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <Border Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" BorderBrush="White" BorderThickness="5" Background="Bisque">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="6*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="6*"></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Column="6" Grid.RowSpan="3">
+                    <TextBlock Margin="10,5" Text="Maximum Compression Force on Low back (N): " FontSize="30" TextWrapping="Wrap"></TextBlock>
+                    <TextBlock Margin="10,5" Name="MaximumLBCFTextBlock" FontSize="30" FontWeight="Bold"></TextBlock>
+                    <TextBlock Margin="10,0" Text="Note: [NIOSH, 1981] Action Limit (AL) = 3400N = 'at risk', Max Permissible Limit (MPL) = 6400N = 'severe condition'" FontSize="14" TextWrapping="Wrap"></TextBlock>
+                    <TextBlock Margin="10,0" Text="Compression force &lt; AL (safe), AL &lt; Compression force &lt; MPL (be careful) and if Compression force &gt; MPL (dangerous)" FontSize="14" TextWrapping="Wrap"></TextBlock>
+                    <TextBlock Margin="10,5" Text="Average Compression Force on low back during task (not including standing) (N):" FontSize="30" TextWrapping="Wrap"></TextBlock>
+                    <TextBlock Margin="10,5" Name="AverageLBCFTextBlock" FontSize="30" FontWeight="Bold"></TextBlock>
+                    <TextBlock Margin="10,5" Text="Duration (during task) with compression force over 3400N, which indicated at risk (seconds):" FontSize="30" TextWrapping="Wrap"></TextBlock>
+                    <TextBlock Margin="10,5" Name="DurationLBCFTextBlock" FontSize="30" FontWeight="Bold"></TextBlock>
+                </StackPanel>
+
+
+                <oxy:PlotView Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" Model="{Binding MyModelLBCF}" Margin="10"></oxy:PlotView>
+
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="Min" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="Q1" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="3" Text="Med" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="4" Text="Mean" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="5" Text="Q3" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Max" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBlock Grid.Row="2" Grid.Column="1" Name="SummaryLBCFTextBlock1" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBlock Grid.Row="2" Grid.Column="2" Name="SummaryLBCFTextBlock2" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBlock Grid.Row="2" Grid.Column="3" Name="SummaryLBCFTextBlock3" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBlock Grid.Row="2" Grid.Column="4" Name="SummaryLBCFTextBlock4" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBlock Grid.Row="2" Grid.Column="5" Name="SummaryLBCFTextBlock5" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                <TextBlock Grid.Row="2" Grid.Column="0" Name="SummaryLBCFTextBlock6" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" BorderBrush="White" BorderThickness="5" Background="Bisque">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="6*"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="4*"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="4*"></ColumnDefinition>
+
+                </Grid.ColumnDefinitions>
+
+                <oxy:PlotView Grid.Row="0" Grid.Column="0" Grid.RowSpan="7" Model="{Binding MyModelPercentile}" Margin="10"></oxy:PlotView>
+                <oxy:PlotView Grid.Row="0" Grid.Column="4" Grid.RowSpan="7" Model="{Binding MyModelSkeleton}" Margin="10"></oxy:PlotView>
+
+                <Border Grid.Row="0" Grid.Column="1" Grid.RowSpan="7" Grid.ColumnSpan="3" Background="White" BorderBrush="Bisque" BorderThickness="10"></Border>
+
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="Wrist" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="Elbow" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="Shoulder" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="Torso" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                <TextBlock Grid.Row="4" Grid.Column="1" Text="Hip" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                <TextBlock Grid.Row="5" Grid.Column="1" Text="Knee" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+                <TextBlock Grid.Row="6" Grid.Column="1" Text="Ankle" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"></TextBlock>
+
+                <Slider Style="{StaticResource Horizontal_Slider}" Name="WristSlider" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" IsEnabled="False" Maximum="100"/>
+                <Slider Style="{StaticResource Horizontal_Slider}" Name="ElbowSlider" Grid.Row="1" Grid.Column="2" VerticalAlignment="Center" IsEnabled="False"  Maximum="100"/>
+                <Slider Style="{StaticResource Horizontal_Slider}" Name="ShoulderSlider" Grid.Row="2" Grid.Column="2" VerticalAlignment="Center" IsEnabled="False"  Maximum="100"/>
+                <Slider Style="{StaticResource Horizontal_Slider}" Name="TorsoSlider" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" IsEnabled="False" Maximum="100"/>
+                <Slider Style="{StaticResource Horizontal_Slider}" Name="HipSlider" Grid.Row="4" Grid.Column="2" VerticalAlignment="Center" IsEnabled="False" Maximum="100"/>
+                <Slider Style="{StaticResource Horizontal_Slider}" Name="KneeSlider" Grid.Row="5" Grid.Column="2" VerticalAlignment="Center" IsEnabled="False" Maximum="100"/>
+                <Slider Style="{StaticResource Horizontal_Slider}" Name="AnkleSlider" Grid.Row="6" Grid.Column="2" VerticalAlignment="Center" IsEnabled="False" Maximum="100"/>
+
+                <TextBlock Name="WristPercentTextBlock" Grid.Row="0" Grid.Column="3" Text=" %" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,30,0"></TextBlock>
+                <TextBlock Name="ElbowPercentTextBlock"  Grid.Row="1" Grid.Column="3" Text=" %" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,30,0"></TextBlock>
+                <TextBlock Name="ShoulderPercentTextBlock" Grid.Row="2" Grid.Column="3" Text=" %" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,30,0"></TextBlock>
+                <TextBlock Name="TorsoPercentTextBlock" Grid.Row="3" Grid.Column="3" Text=" %" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,30,0"></TextBlock>
+                <TextBlock Name="HipPercentTextBlock" Grid.Row="4" Grid.Column="3" Text=" %" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,30,0"></TextBlock>
+                <TextBlock Name="KneePercentTextBlock" Grid.Row="5" Grid.Column="3" Text=" %" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,30,0"></TextBlock>
+                <TextBlock Name="AnklePercentTextBlock" Grid.Row="6" Grid.Column="3" Text=" %" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,30,0"></TextBlock>
+
+
+            </Grid>
+        </Border>
+
+        <TextBlock Grid.Row="4" Grid.ColumnSpan="2" VerticalAlignment="Bottom" Margin="5" Text="Copyright © 2020 Chunxi Huang and Woojoo Kim. KAIST Human Factors and Ergonomics Lab. All rights reserved. http://hfel.kaist.ac.kr/"/>
+        <Image Grid.Row="4" Grid.ColumnSpan="2" Margin="5,8,0,24" HorizontalAlignment="Left" Source="/Resources/KAIST_logo.png"/>
+        <Image Grid.Row="4" Grid.ColumnSpan="2" Margin="110,6,0,22" HorizontalAlignment="Left" Source="/Resources/HFE_logo.png"/>
+
+        <Grid Grid.Row="4" Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="6*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="Timeline" FontSize="24" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center"></TextBlock>
+            <TextBlock Name="TimelineText" Grid.Column="1" Margin="10" Text="0" FontSize="24" HorizontalAlignment="Right" VerticalAlignment="Center"></TextBlock>
+            <Slider Name="TimelineSlider" Grid.Column="2" Margin="36,0,20,0" VerticalAlignment="Center" IsEnabled="False" ValueChanged="TimelineSlider_OnValueChanged"  SmallChange="1" LargeChange="240" IsSnapToTickEnabled="True" TickFrequency="1"/>
+        </Grid>
+
+    </Grid>
+</Window>

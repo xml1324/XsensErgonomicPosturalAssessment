@@ -1,0 +1,418 @@
+﻿<Window x:Class="XsensPosturalAssessment.RULAREBAWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:XsensPosturalAssessment"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        mc:Ignorable="d"
+        Title="Xsens-based postural ergonomic analysis" Height="1080" Width="1920"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"></RowDefinition>
+            <RowDefinition Height="60"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="60"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+
+        <Border Grid.Row="0" Grid.ColumnSpan="3" BorderBrush="White" BorderThickness="3" Background="OrangeRed">
+            <TextBlock Margin="10" Text="Xsens-based postural ergonomic analysis" FontSize="30" FontWeight="Bold" HorizontalAlignment="Center" Foreground="White"/>
+
+        </Border>
+
+        <Button Name="BackButton" HorizontalAlignment="Left" Content=" ◀ Back " FontSize="30" Background="OrangeRed" BorderThickness="3" BorderBrush="White" Foreground="White" Click="BackButton_OnClick"></Button>
+        
+        <Button Name="OpenButton" Grid.Row="1" Click="OpenButton_OnClick" Content="Open Angle Data" FontSize="16" FontWeight="Bold" Height="40" Width="180" HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Button Name="AnalyzeButton" Grid.Row="1" Grid.Column="2" Click="AnalyzeButton_OnClick"  Margin="0,0,210,0" Content="Analyze" FontSize="20" FontWeight="Bold" Height="40" Width="180" HorizontalAlignment="Right" VerticalAlignment="Center" IsEnabled="False"/>
+        <Button Name="ExportButton" Grid.Row="1" Grid.Column="2" Click="ExportButton_OnClick"  Margin="0,0,010,0" Content="Export Results" FontSize="20" FontWeight="Bold" Height="40" Width="180" HorizontalAlignment="Right" VerticalAlignment="Center" IsEnabled="False"/>
+
+        <TextBlock Name="fileNameBlock" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" Margin="10,0,400,0" TextWrapping="Wrap" Text="File: " FontSize="16" Height="50" VerticalAlignment="Center"/>
+
+
+        <Border Grid.Row="2" Grid.Column="0" BorderBrush="White" BorderThickness="5" Background="Bisque">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel Width="180">
+                    <TextBlock Margin="0,10,0,10" HorizontalAlignment="Center" Text="Settings" FontSize="30" FontWeight="Bold" Foreground="OrangeRed"/>
+
+                    <TextBlock Margin="0,10,0,10" HorizontalAlignment="Center" Text="Upper Arms" FontSize="16"/>
+                    <CheckBox Name="UpperArmSupportCheckBox" Margin="10,0,10,10" Click="UpperArmSupportCheckBox_OnClick">
+                        <TextBlock TextWrapping="Wrap" Text="Leaning or supporting the weight of the arm" FontSize="11"/>
+                    </CheckBox>
+
+                    <TextBlock Margin="0,0,0,10" HorizontalAlignment="Center" Text="Lower Arms" FontSize="16"/>
+                    <CheckBox Name="LowerArmMidlineCheckBox" Margin="10,0,10,10" Click="LowerArmMidlineCheckBox_OnClick">
+                        <TextBlock TextWrapping="Wrap" Text="Working across the midline of the body or out to the side" FontSize="11"/>
+                    </CheckBox>
+
+                    <TextBlock Margin="0,0,0,10" HorizontalAlignment="Center" Text="Trunk" FontSize="16"/>
+                    <CheckBox Name="TrunkSupportCheckBox" Margin="10,0,10,10" Click="TrunkSupportCheckBox_OnClick">
+                        <TextBlock TextWrapping="Wrap" Text="Well supported while seated" FontSize="11"/>
+                    </CheckBox>
+
+                    <TextBlock Margin="0,0,0,10" HorizontalAlignment="Center" Text="Legs" FontSize="16"/>
+                    <CheckBox Name="LegSittingCheckBox" Margin="10,0,10,5" Click="LegSittingCheckBox_OnClick">
+                        <TextBlock TextWrapping="Wrap" Text="Sitting" FontSize="11"></TextBlock>
+                    </CheckBox>
+                    <ComboBox Margin="10,0,10,10" Name="LegSupportComboBox" SelectionChanged="LegSupportComboBox_OnSelectionChanged" FontSize="11" >
+                        <ComboBoxItem FontSize="11" IsSelected="True">Bilateral weight bearing, walking or sitting</ComboBoxItem>
+                        <ComboBoxItem FontSize="11" >Unilateral weight bearing, feather weight bearing or an unstable posture</ComboBoxItem>
+                    </ComboBox>
+
+                    <TextBlock Margin="0,0,0,10" HorizontalAlignment="Center" Text="Muscle Use" FontSize="16"/>
+                    <CheckBox Name="MuscleCheckBox" Margin="10,0,10,10" Click="MuscleACheckBox_OnClick">
+                        <TextBlock TextWrapping="Wrap" Text="Mainly static, e.g. held for longer than 1 min; Repeated more than 4 times/min" FontSize="11"/>
+                    </CheckBox>
+
+                    <TextBlock Margin="0,0,0,10" HorizontalAlignment="Center" Text="Force Load" FontSize="16"/>
+                    <ComboBox Margin="10,0,10,5" Name="ForceComboBox" FontSize="11" SelectionChanged="ForceAComboBox_OnSelectionChanged">
+                        <ComboBoxItem FontSize="11" IsSelected="True">No resistance or less than 2kg intermittent load or force</ComboBoxItem>
+                        <ComboBoxItem FontSize="11" >2~10kg intermittent load or force</ComboBoxItem>
+                        <ComboBoxItem FontSize="11" >2~10kg static load; 2~10kg repeated load or force</ComboBoxItem>
+                        <ComboBoxItem FontSize="11" >10kg or more static load; 10kg or more repeated loads or forces; Shock or forces with a rapid build-up</ComboBoxItem>
+                    </ComboBox>
+                    <ComboBox Margin="10,0,10,5" Name="LoadForceComboBox" SelectionChanged="LoadForceComboBox_OnSelectionChanged" FontSize="11" >
+                        <ComboBoxItem FontSize="11"  IsSelected="True">Less than 5 kg</ComboBoxItem>
+                        <ComboBoxItem FontSize="11" >5 ~ 10 kg</ComboBoxItem>
+                        <ComboBoxItem FontSize="11" >More than 10 kg</ComboBoxItem>
+                    </ComboBox>
+                    <CheckBox Name="ShockCheckBox" Margin="10,0,10,10" Click="ShockCheckBox_OnClick">
+                        <TextBlock TextWrapping="Wrap" Text="Shock or rapid build up" FontSize="11" ></TextBlock>
+                    </CheckBox>
+
+                    <TextBlock Margin="0,0,0,10" HorizontalAlignment="Center" Text="Coupling" FontSize="16"/>
+                    <ComboBox Margin="10,0,10,10" Name="CouplingComboBox" SelectionChanged="CouplingComboBox_OnSelectionChanged" FontSize="11" >
+                        <ComboBoxItem IsSelected="True" FontSize="11" >Good: Well-fitting handle and a mid-range, power grip</ComboBoxItem>
+                        <ComboBoxItem FontSize="11" >Fair: Hand hold acceptable but not ideal or coupling is acceptable via another part of the body</ComboBoxItem>
+                        <ComboBoxItem FontSize="11" >Poor: Hand hold not acceptable although possible</ComboBoxItem>
+                        <ComboBoxItem FontSize="11" >Unacceptable: Awkward, unsafe grip, no handles</ComboBoxItem>
+                    </ComboBox>
+
+                    <TextBlock Margin="0,0,0,10" HorizontalAlignment="Center" Text="Activity" FontSize="16"/>
+                    <CheckBox Name="Activity1CheckBox" Margin="10,0,10,0" Click="Activity1CheckBox_OnClick">
+                        <TextBlock TextWrapping="Wrap" Text="1 or more body parts are static, e.g. held for longer than 1 min" FontSize="11" />
+                    </CheckBox>
+                    <CheckBox Name="Activity2CheckBox" Margin="10,0,10,0" Click="Activity2CheckBox_OnClick">
+                        <TextBlock TextWrapping="Wrap" Text="Repeated small range actions, e.g. repeated more than 4 times per minute (not including walking)" FontSize="11" />
+                    </CheckBox>
+                    <CheckBox Name="Activity3CheckBox" Margin="10,0,10,0" Click="Activity3CheckBox_OnClick">
+                        <TextBlock TextWrapping="Wrap" Text="Action causes rapid large range changes in postures or an unstable base" FontSize="11" />
+                    </CheckBox>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <Border Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" BorderBrush="White" BorderThickness="5" Background="Bisque">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="60"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" Text="Joint Angles" FontSize="30" FontWeight="Bold" Foreground="OrangeRed"/>
+                <TextBlock Grid.Row="4" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" Text="RULA" FontSize="30" FontWeight="Bold" Foreground="OrangeRed"/>
+                <TextBlock Grid.Row="5" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" Text="REBA" FontSize="30" FontWeight="Bold" Foreground="OrangeRed"/>
+
+
+                <TextBlock Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" Text="Upper Arms" FontSize="30" FontWeight="Bold" Foreground="OrangeRed"/>
+                <Image Grid.Row="1" Grid.Column="1" Grid.RowSpan="2" Margin="10" Source="/Resources/UpperArms.png"></Image>
+                <Grid Grid.Row="3" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Flexion: " FontSize="18" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Text="Abduction: " FontSize="18" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Text="Rotation: " FontSize="18" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Text="Elevation: " FontSize="18" HorizontalAlignment="Right" ></TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Name="RulaUpperArmLeftFlexionText" Text="0°" FontSize="18" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Name="RulaUpperArmLeftAbductionText" Text="0°" FontSize="18" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Name="RulaUpperArmLeftRotationText" Text="0°" FontSize="18" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Name="RulaUpperArmLeftElevationText" Text="0°" FontSize="18" HorizontalAlignment="Right"></TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Name="RulaUpperArmRightFlexionText" Text="0°" FontSize="18" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Name="RulaUpperArmRightAbductionText" Text="0°" FontSize="18" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Name="RulaUpperArmRightRotationText" Text="0°" FontSize="18" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Name="RulaUpperArmRightElevationText" Text="0°" FontSize="18" HorizontalAlignment="Right"></TextBlock>
+                    </StackPanel>
+                </Grid>
+                <TextBlock Name="RulaUpperArmScoreText" Grid.Row="4" Grid.Column="1" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="50" FontWeight="Bold" Background="white">0</TextBlock>
+
+                <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" Text="Lower Arms" FontSize="30" FontWeight="Bold" Foreground="OrangeRed"/>
+                <Image Grid.Row="1" Grid.Column="2" Grid.RowSpan="2" Margin="10" Source="/Resources/LowerArms.png"></Image>
+                <Grid Grid.Row="3" Grid.Column="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Flexion:" Grid.Column="0" FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                    <TextBlock Name="RulaLowerArmLeftFlexionText" Grid.Column="1" Text="0°" FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                    <TextBlock Name="RulaLowerArmRightFlexionText" Grid.Column="2" Text="0°" FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                </Grid>
+                <TextBlock Name="RulaLowerArmScoreText" Grid.Row="4" Grid.Column="2" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="50" FontWeight="Bold" Background="white">0</TextBlock>
+
+                <TextBlock Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" Text="Wrists" FontSize="30" FontWeight="Bold" Foreground="OrangeRed"/>
+                <Image Grid.Row="1" Grid.Column="3" Grid.RowSpan="2" Margin="10" Source="/Resources/Wrists.png"></Image>
+                <Grid Grid.Row="3" Grid.Column="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Flexion: " FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Text="Deviation: " FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Text="Rotation: " FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Name="RulaWristLeftFlexionText" Text="0°" FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Name="RulaWristLeftDeviationText" Text="0°" FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Name="RulaWristLeftRotationText" Text="0°" FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2">
+                        <TextBlock Name="RulaWristRightFlexionText" Text="0°" FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Name="RulaWristRightDeviationText" Text="0°" FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Name="RulaWristRightRotationText" Text="0°" FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="4" Grid.Column="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Name="RulaWristScoreText" Grid.Column="0" Margin="10,10,5,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="50" FontWeight="Bold" Background="white">0</TextBlock>
+                    <TextBlock Name="RulaWristTwistScoreText" Grid.Column="1" Margin="5,10,10,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="50" FontWeight="Bold" Background="white">0</TextBlock>
+                </Grid>
+
+
+                <TextBlock Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" Text="Neck" FontSize="30" FontWeight="Bold" Foreground="OrangeRed"/>
+                <Image Grid.Row="1" Grid.Column="4" Grid.RowSpan="2" Margin="10" Source="/Resources/Neck.png"></Image>
+                <Grid Grid.Row="3" Grid.Column="4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Flexion: " FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Text="Bending: " FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Text="Rotation: " FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Name="RulaNeckFlexionText" Text="0°" FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Name="RulaNeckBendingText" Text="0°" FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Name="RulaNeckRotationText" Text="0°" FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                    </StackPanel>
+                </Grid>
+                <TextBlock Name="RulaNeckScoreText" Grid.Row="4" Grid.Column="4" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="50" FontWeight="Bold" Background="white">0</TextBlock>
+
+                <TextBlock Grid.Row="0" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" Text="Trunk" FontSize="30" FontWeight="Bold" Foreground="OrangeRed"/>
+                <Image Grid.Row="1" Grid.Column="5" Grid.RowSpan="2" Margin="10" Source="/Resources/Trunk.png"></Image>
+                <Grid Grid.Row="3" Grid.Column="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Flexion: " FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Text="Bending: " FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Text="Rotation: " FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Name="RulaTrunkFlexionText" Text="0°" FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Name="RulaTrunkBendingText" Text="0°" FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                        <TextBlock Name="RulaTrunkRotationText" Text="0°" FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                    </StackPanel>
+                </Grid>
+                <TextBlock Name="RulaTrunkScoreText" Grid.Row="4" Grid.Column="5" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="50" FontWeight="Bold" Background="white">0</TextBlock>
+
+                <TextBlock Grid.Row="0" Grid.Column="6" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" Text="Legs" FontSize="30" FontWeight="Bold" Foreground="OrangeRed"/>
+                <Image Grid.Row="1" Grid.Column="6" Grid.RowSpan="2" Margin="10" Source="/Resources/Legs.png"></Image>
+                <TextBlock Name="RulaLegScoreText" Grid.Row="4" Grid.Column="6" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="50" FontWeight="Bold" Background="white">0</TextBlock>
+                <Grid Grid.Row="3" Grid.Column="6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Flexion:" Grid.Column="0" FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                    <TextBlock Name="RebaLegLeftFlexionText" Grid.Column="1" Text="0°" FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                    <TextBlock Name="RebaLegRightFlexionText" Grid.Column="2" Text="0°" FontSize="20" HorizontalAlignment="Right"></TextBlock>
+                </Grid>
+
+                <TextBlock Grid.Row="0" Grid.Column="7" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10" Text="Others" FontSize="30" FontWeight="Bold" Foreground="OrangeRed"/>
+                <StackPanel Grid.Row="4" Grid.Column="7">
+                    <TextBlock Name="RulaMuscleAScoreText" Margin="10,10,10,2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontWeight="Bold" Background="White" FontSize="13"> Muscle A: 0</TextBlock>
+                    <TextBlock Name="RulaForceAScoreText" Margin="10,2,10,2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontWeight="Bold" Background="White" FontSize="13"> Force A: 0</TextBlock>
+                    <TextBlock Name="RulaMuscleBScoreText" Margin="10,2,10,2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontWeight="Bold" Background="White" FontSize="13"> Muscle B: 0</TextBlock>
+                    <TextBlock Name="RulaForceBScoreText" Margin="10,2,10,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontWeight="Bold" Background="White" FontSize="13"> Force B: 0</TextBlock>
+                </StackPanel>
+
+                <Border Grid.Row="6" Grid.RowSpan="4" Grid.Column="0" Grid.ColumnSpan="8" BorderBrush="OrangeRed" BorderThickness="5" Background="white"/>
+
+                <TextBlock Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,10,10,0" Name="RulaGrandScoreText" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="50" FontWeight="Bold" Background="White"> RULA Score: 0</TextBlock>
+                <TextBlock Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="10,0,10,10" Name="RulaActionText" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="21" FontWeight="Bold" Background="White" TextWrapping="Wrap"> Posture is acceptable if it is not maintained or repeated for long periods</TextBlock>
+
+
+
+                <TextBlock Name="RebaUpperArmScoreText" Grid.Row="5" Grid.Column="1" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="50" FontWeight="Bold" Background="white">0</TextBlock>
+                <TextBlock Name="RebaLowerArmScoreText" Grid.Row="5" Grid.Column="2" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="50" FontWeight="Bold" Background="white">0</TextBlock>
+                <TextBlock Name="RebaWristScoreText" Grid.Row="5" Grid.Column="3" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="50" FontWeight="Bold" Background="white">0</TextBlock>
+                <TextBlock Name="RebaNeckScoreText" Grid.Row="5" Grid.Column="4" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="50" FontWeight="Bold" Background="white">0</TextBlock>
+                <TextBlock Name="RebaTrunkScoreText" Grid.Row="5" Grid.Column="5" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="50" FontWeight="Bold" Background="white">0</TextBlock>
+                <TextBlock Name="RebaLegScoreText" Grid.Row="5" Grid.Column="6" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="50" FontWeight="Bold" Background="white">0</TextBlock>
+
+                <StackPanel Grid.Row="5" Grid.Column="7">
+                    <TextBlock Name="RebaCouplingScoreText" Margin="10,10,10,2.5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="18" FontWeight="Bold" Background="White"> Coupling: 0</TextBlock>
+                    <TextBlock Name="RebaLoadForceScoreText" Margin="10,2.5,10,2.5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="18" FontWeight="Bold" Background="White"> Load/Force: 0</TextBlock>
+                    <TextBlock Name="RebaActivityScoreText" Margin="10,2.5,10,10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="18" FontWeight="Bold" Background="White"> Activity: 0</TextBlock>
+                </StackPanel>
+
+                <TextBlock Grid.Row="6" Grid.Column="4" Grid.ColumnSpan="2" Margin="10,10,10,0" Name="RebaGrandScoreText" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="50" FontWeight="Bold" Background="White"> REBA Score: 0</TextBlock>
+                <TextBlock Grid.Row="7" Grid.Column="4" Grid.ColumnSpan="2" Margin="10,0,10,10" Name="RebaActionText" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextAlignment="Center" FontSize="24" FontWeight="Bold" Background="White" TextWrapping="Wrap"> Risk level: Negligible <LineBreak/> Action: None necessary</TextBlock>
+
+                <oxy:PlotView Model="{Binding MyModelRula}" Grid.Row="6" Grid.RowSpan="4" Grid.Column="2" Grid.ColumnSpan="2" Margin="10"></oxy:PlotView>
+                <oxy:PlotView Model="{Binding MyModelReba}" Grid.Row="6" Grid.RowSpan="4" Grid.Column="6" Grid.ColumnSpan="2" Margin="10"></oxy:PlotView>
+
+                <Grid Grid.Row="8" Grid.RowSpan="2" Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="2*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Avg.Score" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"></TextBlock>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="Duration" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Name="RulaAverageScoreText" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Name="RulaDurationText" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"></TextBlock>
+
+                </Grid>
+
+                <Grid Grid.Row="8" Grid.RowSpan="2" Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="2*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text=" 3~4 " VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Background="Yellow"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text=" 5~6 " VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Background="Orange"/>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text =" 7 " VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Background="red"></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Name="Rula34DurationText" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" FontSize="16"></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Name="Rula56DurationText" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" FontSize="16"></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Name="Rula7DurationText" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" FontSize="16"></TextBlock>
+                </Grid>
+
+                <Grid Grid.Row="8" Grid.RowSpan="2" Grid.Column="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="2*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Avg.Score" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"></TextBlock>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text="Duration" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold"></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="0" Name="RebaAverageScoreText" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Name="RebaDurationText" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20"></TextBlock>
+
+                </Grid>
+
+                <Grid Grid.Row="8" Grid.RowSpan="2" Grid.Column="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="2*"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text=" 4~7 " VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Background="Yellow"/>
+                    <TextBlock Grid.Row="0" Grid.Column="1" Text =" 8~10 " VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Background="Orange"></TextBlock>
+                    <TextBlock Grid.Row="0" Grid.Column="2" Text =" 11~15 " VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="20" FontWeight="Bold" Background="Red"></TextBlock>
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Name="Reba47DurationText" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" FontSize="16"></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="1" Name="Reba810DurationText" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" FontSize="16"></TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="2" Name="Reba1115DurationText" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center" FontSize="16"></TextBlock>
+                </Grid>
+
+
+            </Grid>
+        </Border>
+
+        <TextBlock Grid.Row="3" Grid.ColumnSpan="2" VerticalAlignment="Bottom" Margin="5" Text="Copyright © 2020 Woojoo Kim and Chunxi Huang. KAIST Human Factors and Ergonomics Lab. All rights reserved. http://hfel.kaist.ac.kr/"/>
+        <Image Grid.Row="3" Grid.ColumnSpan="2" Margin="5,8,0,24" HorizontalAlignment="Left" Source="/Resources/KAIST_logo.png"/>
+        <Image Grid.Row="3" Grid.ColumnSpan="2" Margin="110,6,0,22" HorizontalAlignment="Left" Source="/Resources/HFE_logo.png"/>
+
+
+        <Grid Grid.Row="4" Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="Timeline" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+            <TextBlock Name="TimelineText" Grid.Column="2" Margin="10" Text="0" FontSize="24" HorizontalAlignment="Right" VerticalAlignment="Center"></TextBlock>
+            <Slider Name="TimelineSlider" Grid.Column="3" Margin="36,0,20,0" VerticalAlignment="Center" IsEnabled="False" ValueChanged="TimelineSlider_OnValueChanged" SmallChange="1" LargeChange="240" IsSnapToTickEnabled="True" TickFrequency="1"/>
+            <Button Name="MaxButton" Grid.Column="1" Margin="10" Content="Find Max" FontSize="20" FontWeight="Bold" IsEnabled="False" Click="MaxButton_OnClick"></Button>
+        </Grid>
+
+
+
+    </Grid>
+</Window>
